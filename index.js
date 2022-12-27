@@ -28,10 +28,29 @@ async function run() {
             const todos = await todoCollection.find(query).toArray();
             res.send(todos)
         })
+        app.get('/done', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email, status: "done" };
+            const todos = await todoCollection.find(query).toArray();
+            res.send(todos)
+        })
 
         app.post('/todo', async (req, res) => {
             const todo = req.body;
             const result = await todoCollection.insertOne(todo);
+            res.send(result);
+        })
+
+        app.put('/todo/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+                    status: "done"
+                }
+            }
+            const result = await todoCollection.updateOne(filter, updatedDoc, options);
             res.send(result);
         })
     }
