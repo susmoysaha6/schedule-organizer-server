@@ -22,6 +22,18 @@ async function run() {
             const todos = await todoCollection.find({}).toArray();
             res.send(todos)
         })
+        app.get('/todo', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email, status: "pending" };
+            const todos = await todoCollection.find(query).toArray();
+            res.send(todos)
+        })
+
+        app.post('/todo', async (req, res) => {
+            const todo = req.body;
+            const result = await todoCollection.insertOne(todo);
+            res.send(result);
+        })
     }
     finally { }
 }
