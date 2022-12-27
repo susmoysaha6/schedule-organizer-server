@@ -34,7 +34,12 @@ async function run() {
             const todos = await todoCollection.find(query).toArray();
             res.send(todos)
         })
-
+        app.delete('/todo/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const result = await todoCollection.deleteOne(filter);
+            res.send(result);
+        })
         app.post('/todo', async (req, res) => {
             const todo = req.body;
             const result = await todoCollection.insertOne(todo);
